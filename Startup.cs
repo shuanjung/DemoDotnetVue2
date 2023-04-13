@@ -39,7 +39,25 @@ namespace DemoDotnetVue2
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.Use(async (context, next) =>
+            {
+                await next();
+                // 判斷是否要存取網頁，而不是發送 API需求
+                bool IsAPI = !context.Request.Path.Value.StartsWith("/api");
+                if (context.Response.StatusCode == 404 &&                        // 該資源不存在
+                    !System.IO.Path.HasExtension(context.Request.Path.Value) &&  //網址最後沒有帶副檔名
+                    !IsAPI) 
+                {
+                    context.Request.Path = "/index.html";
+                    context.Response.StatusCode = 200;
+                    await next();
+                }
+            });
+
             app.UseHttpsRedirection();
+            // Web API設定預設檔案
+            app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
