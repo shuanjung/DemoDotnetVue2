@@ -1,4 +1,4 @@
-# watermobile
+# watermobile_eslintonly
 
 ## Project setup
 ```
