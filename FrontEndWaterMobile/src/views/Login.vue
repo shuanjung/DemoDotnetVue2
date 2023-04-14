@@ -14,7 +14,7 @@
           <input class="form-control formifx" type="verify" v-model="userVerify" placeholder="請輸入驗證碼"
             @keyup.enter="LoginCheck" required />
           <b-icon class="iconfix refresh" icon="arrow-clockwise" @click="refreshCode"></b-icon>
-          <!-- <HelloWorld class="d-flex" :identifyCode="identifyCode"></HelloWorld> -->
+          <IdentifyCode class="d-flex" :identifyCode="identifyCode"></IdentifyCode>
         </div>
         <b-button class="btn btn-lg btn-block mt-4 fixLoginBtn" variant="primary" @click="LoginCheck">登入</b-button>
       </form>
@@ -24,12 +24,16 @@
 
 <script>
 // @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
+import IdentifyCode from '@/components/IdentifyCode.vue'
+import {
+  LoginCheckAlert,
+  LoginAlert,
+  ErrorAlert
+} from "@/mapconfig/mapconfig";
 export default {
-  name: 'HomeView',
+  name: 'LoginPage',
   components: {
-    // HelloWorld
+    IdentifyCode
   },
   data() {
     return {
@@ -181,6 +185,71 @@ export default {
       }
       ]
     };
+  },
+  methods: {
+    //圖形驗證
+    randomNum(min, max) {
+      max = max + 1;
+      return Math.floor(Math.random() * (max - min) + min);
+    },
+    refreshCode() {
+      this.identifyCode = "";
+      this.makeCode(this.identifyCodes, 4);
+    },
+    makeCode(data, len) {
+      for (let i = 0; i < len; i++) {
+        this.identifyCode += data[
+          this.randomNum(0, data.length - 1)
+        ];
+      }
+    },
+    LoginCheck() {
+      if (this.userAccount.length === 0) {
+        new ErrorAlert("請輸入帳號!");
+        this.refreshCode();
+      } else if (this.userPassword.length === 0) {
+        new ErrorAlert("請輸入密碼!");
+        this.refreshCode();
+      } else if (this.userVerify.length === 0) {
+        new ErrorAlert("請輸入驗證碼!");
+        this.refreshCode();
+      } else if (this.userVerify.toUpperCase() !== this.identifyCode.toUpperCase()) {
+        new ErrorAlert("您輸入的驗證碼錯誤!");
+        this.refreshCode();
+      } else {
+        new LoginCheckAlert("AD帳號驗證中，請稍後...")
+        this.axios.post('api/Authorization', {
+          Domain: this.selected.ADZone,
+          Account: this.userAccount,
+          Password: this.userPassword
+        })
+          .then(response => {
+            if (response.data.tologin === "success") {
+              sessionStorage.setItem('UserZone', this.selected.userZone);
+              sessionStorage.setItem('UserExtent', this.selected.extent);
+              sessionStorage.setItem('UserTraceId', response.data.traceid);
+              new LoginAlert("歡迎，" + response.data.cname + "使用圖資查詢系統(行動版)");
+              this.$router.replace('/olmap');
+            } else if (response.data.tologin === "ADNoAuthorization") {
+              new ErrorAlert("查無此AD帳號!");
+              this.refreshCode();
+            } else if (response.data.tologin === "NoAuthorization") {
+              new ErrorAlert("您無權限進入系統，請洽帳號管理人員!");
+              this.refreshCode();
+            } else if (response.data.tologin === "Error") {
+              new ErrorAlert("帳號或密碼輸入錯誤!");
+              this.refreshCode();
+            }
+          })
+          .catch(function () {
+            new ErrorAlert("連接逾時!請重新操作");
+          });
+      }
+    }
+  },
+  created() {
+    //載入時產生驗證碼
+    this.refreshCode();
   }
 }
 </script>
