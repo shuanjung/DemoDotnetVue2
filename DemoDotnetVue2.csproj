@@ -6,6 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.StaticFilesEx" Version="1.0.0.4" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.7" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="5.0.7" />
+    <PackageReference Include="System.DirectoryServices" Version="5.0.0" />
   </ItemGroup>
 
 </Project>

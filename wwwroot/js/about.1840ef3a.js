@@ -1,2 +1,0 @@
-"use strict";(self["webpackChunkwatermobile"]=self["webpackChunkwatermobile"]||[]).push([[443],{5399:function(t,e,n){n.r(e),n.d(e,{default:function(){return i}});var u=function(){var t=this;t._self._c;return t._m(0)},s=[function(){var t=this,e=t._self._c;return e("div",{staticClass:"about"},[e("h1",[t._v("This is an about page")])])}],a=n(1001),l={},r=(0,a.Z)(l,u,s,!1,null,null,null),i=r.exports}}]);
-//# sourceMappingURL=about.1840ef3a.js.map
