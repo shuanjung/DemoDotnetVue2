@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +24,11 @@ namespace DemoDotnetVue2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            _ = services.AddControllersWithViews();
+            _ = services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoDonetVue2", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,16 +36,18 @@ namespace DemoDotnetVue2
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                _ = app.UseDeveloperExceptionPage();
+                _ = app.UseSwagger();
+                _ = app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoDonetVue2 v1"));
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                _ = app.UseExceptionHandler("/Home/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                _ = app.UseHsts();
             }
 
-            app.Use(async (context, next) =>
+            _ = app.Use(async (context, next) =>
             {
                 await next();
                 // 判斷是否要存取網頁，而不是發送 API需求
@@ -55,16 +62,16 @@ namespace DemoDotnetVue2
                 }
             });
 
-            app.UseHttpsRedirection();
+            _ = app.UseHttpsRedirection();
             // Web API設定預設檔案
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            _ = app.UseDefaultFiles();
+            _ = app.UseStaticFiles();
 
-            app.UseRouting();
+            _ = app.UseRouting();
 
-            app.UseAuthorization();
+            _ = app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
+            _ = app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
