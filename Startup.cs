@@ -25,6 +25,10 @@ namespace DemoDotnetVue2
         public void ConfigureServices(IServiceCollection services)
         {
             _ = services.AddControllersWithViews();
+            _ = services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromHours(8);
+            });
             _ = services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoDonetVue2", Version = "v1" });
@@ -70,6 +74,8 @@ namespace DemoDotnetVue2
             _ = app.UseRouting();
 
             _ = app.UseAuthorization();
+
+            _ = app.UseSession();
 
             _ = app.UseEndpoints(endpoints =>
             {
