@@ -3,7 +3,6 @@ using Npgsql;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-//using DemoDotnetVue2.Models;
 using DemoDotnetVue2.Models.QueryResult;
 using System.Globalization;
 using System;
@@ -72,7 +71,7 @@ namespace DemoDotnetVue2.Controllers
                             result = new IsAuthor
                             {
                                 Tologin = "success",
-                                Traceid = AEScode.AesEncryptBase64(Convert.ToString(Reader["Gid"], CultureInfo.InvariantCulture)),
+                                Traceid = AEScode.AesEncryptBase64(Convert.ToString(Reader["Gid"], CultureInfo.InvariantCulture) + "," + QueryZone(AuthorInfo.Domain)),
                                 Cname = Convert.ToString(Reader["cname"], CultureInfo.InvariantCulture)
                             };
                         }
@@ -82,7 +81,7 @@ namespace DemoDotnetVue2.Controllers
                 }
                 if (result != null)
                 {
-                    string sql = @"INSERT INTO LOGINFO(ACCOUNT,IP,LOGIN_TIME,STATUS,SYSTEM_NO,USER_ZONE) VALUES (@ACCOUNT,@IP,@LOGIN_TIME,@STATUS,@SYSTEM_NO,@USER_ZONE";
+                    string sql = @"INSERT INTO LOGINFO(ACCOUNT,IP,LOGIN_TIME,STATUS,SYSTEM_NO,USER_ZONE) VALUES (@ACCOUNT,@IP,@LOGIN_TIME,@STATUS,@SYSTEM_NO,@USER_ZONE)";
                     string sqlDataSource = _configuration.GetConnectionString("twwaterContext");
                     DateTime Logindate = DateTime.Now;
                     string Ip = HttpContext.Request.HttpContext.Connection.RemoteIpAddress.ToString();
