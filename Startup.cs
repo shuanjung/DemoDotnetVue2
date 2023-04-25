@@ -44,12 +44,6 @@ namespace DemoDotnetVue2
                 _ = app.UseSwagger();
                 _ = app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "DemoDonetVue2 v1"));
             }
-            else
-            {
-                _ = app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                _ = app.UseHsts();
-            }
 
             _ = app.Use(async (context, next) =>
             {
