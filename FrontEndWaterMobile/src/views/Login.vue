@@ -229,7 +229,7 @@ export default {
               sessionStorage.setItem('UserExtent', this.selected.extent);
               sessionStorage.setItem('UserTraceId', response.data.traceid);
               new LoginAlert("歡迎，" + response.data.cname + "使用圖資查詢系統(行動版)");
-              this.$router.replace('/AboutView');
+              this.$router.replace('/olmap');
             } else if (response.data.tologin === "ADNoAuthorization") {
               new ErrorAlert("查無此AD帳號!");
               this.refreshCode();
