@@ -1,0 +1,27 @@
+#map {
+    height: 100%;
+    z-index: 0;
+    position: relative;
+}
+
+/* 隱藏ol元素(+,-按鈕 copyright) */
+.ol-attribution,
+.ol-zoom {
+    display: none;
+}
+
+.swal2-select {
+    font-weight: bold;
+}
+
+.swal2-select option {
+    font-weight: bold;
+}
+
+.confirmFix {
+    font-weight: bold;
+}
+
+.cancelFix {
+    font-weight: bold;
+}
