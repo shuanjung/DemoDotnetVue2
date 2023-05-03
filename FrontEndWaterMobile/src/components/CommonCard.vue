@@ -2,7 +2,7 @@
     <div class="commonCard">
         <!-- 按鍵功能 -->
         <div class="ButtonBar">
-            <b-button variant="primary">
+            <b-button :class="querybar ? null : 'collapsed'" :aria-expanded="querybar ? 'true' : 'false'" @click="handleClick();" variant="primary">
                 <b-icon icon="search"></b-icon>
                 <p>查詢</p>
             </b-button>
@@ -27,6 +27,7 @@
                 <p>分區</p>
             </b-button>
         </div>
+        <!-- 按鈕功能結束 -->
     </div>
 </template>
 
@@ -38,8 +39,54 @@ export default {
     },
     data() {
         return {
-            querybar:true
+            querybar:false,
+            collapses: [{
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            },
+            {
+                visible:false
+            }
+            ]
         };
+    },
+    mounted() {
+        const dropdown = this.$refs.dropdown;
+        // 監聽設施上拉打開時必須將所有下拉及其他功能關閉
+        this.$root.$on('bv::dropdown::shown', () => {
+            dropdown.hideMenu();
+        })
+    },
+    methods: {
+        handleClick() {
+            this.querybar = !this.querybar;
+            // 將狀態發送給父節點
+            this.$emit("SmitSearch", this.querybar);
+            this.collapses.forEach(collapse => {
+                collapse.visible = false
+            });
+            // 記錄目前使用功能
+            this.$store.commit('UseTrack', {
+                isUsing: 8
+            });
+        }
     }
 }
 </script>
@@ -88,7 +135,7 @@ p {
 }
 .ButtonBar {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
 }
 .commonCard {
     position: absolute;

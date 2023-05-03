@@ -21,7 +21,7 @@
       </b-dropdown-item-button>
     </b-dropdown>
     <!-- 屬性資料按鈕 -->
-    <b-button class="ml-auto attributeFix" variant="link"></b-button>
+    <b-button class="ml-auto attributeFix" variant="link" v-show="showAttributes"></b-button>
   </div>
 </template>
 
@@ -39,7 +39,7 @@ export default {
   },
   data() {
     return {
-      ShowSearch: true
+      ShowSearch: false
     };
   },
   computed: {
@@ -74,6 +74,7 @@ export default {
         isUsing: 9
       });
     }
+    
   }
 }
 </script>
@@ -120,6 +121,14 @@ export default {
     display: flex;
     font-size: 0.9rem;
   }
+  .attributeFix {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    bottom: 90px;
+    z-index: 1;
+  }
 }
 
 @media (min-width: 321px) {
@@ -161,6 +170,14 @@ export default {
   .optionFix .b-icon {
     display: flex;
     font-size: 1.3rem;
+  }
+  .attributeFix {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    bottom: 115px;
+    z-index: 1;
   }
 }
 
