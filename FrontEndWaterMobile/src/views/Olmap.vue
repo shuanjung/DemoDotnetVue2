@@ -4,6 +4,8 @@
     <SearchBar v-if="ShowSearch"></SearchBar>
     <!-- 按鍵開啟折疊的div -->
     <CommonCard v-on:SmitSearch="OpenBar" ref="CommonMethod"></CommonCard>
+    <!-- 圖層設定 -->
+    <LayerSelect v-if="ShowLayerSelect"></LayerSelect>
     <!-- GPS按鈕功能 -->
     <b-button class="ml-auto btnFix" variant="link" v-b-tooltip.top.focus="'GPS定位'" @click="getLocation">
       <b-icon icon="geo"></b-icon>
@@ -27,36 +29,132 @@
 
 <script>
 import { 
-  ErrorAlert
+  CorrectAlert,
+  ErrorAlert,
+  CloseSWAlert,
+  ClearAllPoint,
 } from '@/mapconfig/mapconfig';
 import SearchBar from "@/components/SearchDetails/SearchBar.vue";
-import CommonCard from '@/components/CommonCard.vue';
+import CommonCard from "@/components/CommonCard.vue";
+import LayerSelect from "@/components/LayerSelect.vue";
 
 export default {
   components: {
     SearchBar,
-    CommonCard
+    CommonCard,
+    LayerSelect
   },
   data() {
     return {
-      ShowSearch: false
+      gpsLoction: null,
+      ShowSearch: false,
+      timer: null,
+      time: 600,
     };
   },
   computed: {
-
+    showAttributes() {
+      return this.$store.state.Attributes;
+    },
+    ShowLayerSelect: {
+      get() {
+        return this.$store.state.IsLayerSelect;
+      },
+      set(value) {
+        this.$store.commit('ControlLayerSetting', {
+          LayerSelect: value
+        });
+      }
+    }
   },
   watch: {
-
+    // 監聽目前範圍決定要載入的map檔
+    // '$store.state.extent' : function (newValue) {
+    //   if (newValue) {
+    //     this.axios.get('api/MapfileQuery/' + encodeURIComponent(newValue[0]) + "/" + encodeURIComponent(newValue[2]) + "/" + encodeURIComponent(newValue[1]) + "/" + encodeURIComponent(newValue[3]))
+    //       .then(response => {
+    //         this.$store.commit('GetMapFileStr', {
+    //           MapStr: response.data.wT_ID
+    //         });
+    //       })
+    //       // .catch(function () {
+    //       //   new ErrorAlert("連接逾時！請重新操作");
+    //       // });
+    //   }
+    // },
+    // 當mapFileStr值改變時，必須重新截圖(更換mapserver參數)
+    // '$store.state.mapFileStr': function (newValue) {
+    //   if (newValue) {
+    //     this.$store.commit("set_TWE");
+    //   }
+    // },
   },
   mounted() {
-
+    this.$nextTick(function () {
+      this.BaseMap();
+      this.Countdown();
+      this.$el.addEventListener('click', this.timeRefresh);
+      this.$el.addEventListener('touchstart', this.timeRefresh, {
+        passive: true
+      });
+      this.$el.addEventListener('touchend', this.timeRefresh);
+    });
   },
   methods: {
+    // 載圖以及定位分區
+    BaseMap () {
+      this.$store.commit("BaseMap");
+      // let UserExtent = sessionStorage.getItem('UserExtent');
+      let UserExtent = '';  // 略過登入驗證
+      if (UserExtent) {
+        if (UserExtent.length !== 0){
+          this.$store.commit("flyToZoneExtent", {
+            userExtent: UserExtent
+          });
+        }
+      }
+    },
+    timeRefresh() {
+      this.time = 600;
+    },
+    Countdown () {
+      this.timer = setInterval(() => {
+        this.time--;
+      }, 1000);
+    },
     OpenBar (mes) {
       if (mes == true) {
         this.ShowSearch = true;
       } else {
         this.ShowSearch = false;
+      }
+    },
+    showPosition (position) {
+      new CorrectAlert("GPS定位中........");
+      this.gpsLoction = 
+          position.coords.longitude + "," + position.coords.latitude;
+      this.GPSzoomxy({
+        xy: this.gpsLoction,
+        zoom: "19",
+        epsg_code: "4326",
+      });
+    },
+    showError (error) {
+      switch (error.code) {
+        case error.PERMISSION_DENIED:
+          new ErrorAlert(
+            "請允許存取您的位置資訊，" + "</br>" + "再使用GPS定位功能！"
+          );
+          break;
+        case error.POSITION_UNAVAILABLE:
+          new ErrorAlert("無法取得GPS提供位置服務！");
+          break;
+        case error.TIMEOUT:
+          new ErrorAlert("連接逾時，請重試！");
+          break;
+        case error.UNKNOWN_ERROR:
+          new ErrorAlert("發生未知錯誤");
+          break;
       }
     },
     getLocation () {
@@ -73,8 +171,16 @@ export default {
       this.$store.commit('UseTrack', {
         isUsing: 9
       });
+    },
+    clearLayer () {
+      new ClearAllPoint();
     }
-    
+  },
+  destroyed () {
+    // 離開此頁，把之前種的點去掉及清掉Select管線 包含關閉所有SweetAlert
+    clearInterval(this.timer);
+    new CloseSWAlert();
+    new ClearAllPoint();
   }
 }
 </script>

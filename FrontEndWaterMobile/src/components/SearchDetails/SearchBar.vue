@@ -10,14 +10,17 @@
             <b-icon icon="search"></b-icon>
           </b-input-group-text>
         </template>
-        <b-form-input placeholder="關鍵字查詢"></b-form-input>
+        <b-form-input ref="inputText" v-model="inputValue" placeholder="關鍵字查詢" @click.native="showResult" @keyup.enter="setTimeLimit" @input="isInput"></b-form-input>
       </b-input-group>
     </div>
   </div>
 </template>
 
 <script>
-import { ErrorAlert } from '@/mapconfig/mapconfig';
+import { 
+  CorrectAlert,
+  ErrorAlert 
+} from '@/mapconfig/mapconfig';
 
 export default {
   name: "SearchBar",
@@ -33,6 +36,18 @@ export default {
     clearValue () {
       this.inputValue = '';
       this.queryResult = null;
+    },
+    showResult () {
+      if (this.inputValue != '') {
+        this.isShow = true;
+      }
+    },
+    isInput () {
+      this.isShow = false;
+      this.queryResult = null;
+    },
+    closeResult () {
+      this.isShow = false
     },
     // 設定click事件觸發間隔 禁止連續點擊
     setTimeLimit () {
@@ -50,6 +65,25 @@ export default {
       // ios input 輸入enter時 不會取消對input的焦點 所以需要手動取消
       this.$refs.inputText.blur();
       this.processing = true;
+      if (this.inputValue.length != 0) {
+        this.axios.get('api/Fuzzies/' + encodeURIComponent(this.inputValue))
+            .then(response => {
+              if (response != null) {
+                if (response.data[0].CONTENT == "無任何資料") {
+                  this.queryResult = null;
+                  new CorrectAlert("查無資料！");
+                } else {
+                  this.queryResult = response.data;
+                  this.isShow = true;
+                }
+              }
+            })
+            .catch (function () {
+              new CorrectAlert("國土測繪中心介接服務" + "</br>" + "[關鍵字查詢]目前沒有回應，" + "</br>" + "請稍後再重新查詢！");
+            });
+      } else {
+        new ErrorAlert("請輸入關鍵字！");
+      }
     }
   }
 };
