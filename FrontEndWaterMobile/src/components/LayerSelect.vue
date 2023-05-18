@@ -8,16 +8,19 @@
             <div class="checkboxDiv">
                 <b-form-checkbox v-model="MaxChecked" name="check-button" switch size="sm" @change="changMax">正射影像圖(混合)</b-form-checkbox>
                 <b-form-checkbox v-model="LandChecked" name="check-button" switch size="sm" @change="changLand">地籍圖(國土測繪中心)</b-form-checkbox>
+                <v-jstree :data="data" ref="tree" show-checkbox multiple allow-batch whole-row @item-click="setSelectedItems"></v-jstree>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-
+import VJstree from 'vue-jstree';
 export default {
     name: "LayerSelect",
-    components: {},
+    components: {
+        VJstree
+    },
     computed: {
         ShowLayerSelect: {
             get() {
