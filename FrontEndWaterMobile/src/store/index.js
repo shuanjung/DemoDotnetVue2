@@ -29,11 +29,13 @@ export default new Vuex.Store({
     maxLayer: null,
     IsLayerSelect: false,
     LandSelect: false,
+    MaxSelect: false,
     map: null,
     extent: null,
     clickPoint: null,
     BuiltGid: null,
     Scale: null,
+    Tolerance: null,
     TrackUse: null,
     Attributes: false,
     mapFileStr: "01,02,03,04,05,06,07,08,09,10,11,12,13",
@@ -71,7 +73,7 @@ export default new Vuex.Store({
           format: "image/png",
           style: "_null",
           projection: projection,
-          titleGrid: new WMTSTileGrid ({
+          tileGrid: new WMTSTileGrid ({
             origin: getTopLeft(projectionExtent),
             resolutions: resolutions,
             matrixIds: matrixIds,
@@ -132,7 +134,13 @@ export default new Vuex.Store({
         if (str == "down") zoom++;
         if (state.map.getView().getZoom() >= zoom) return;
         // TWESource.clear();
-      })
+      });
+    },
+    changMaxlayer (state) {
+      state.maxLayer.setVisible(state.MaxSelect);
+    },
+    changLandlayer (state) {
+      state.landLayer.setVisible(state.LandSelect);
     },
     // flyToZoneExtent (state, payload) {
     //   let Extent = payload.userExtent.split(",");
@@ -218,25 +226,31 @@ export default new Vuex.Store({
     //   TWESource.clear();
     //   this.commit('set_TWE');
     // },
-    // UseTrack (state, payload) {
-    //   let tempUse = payload.isUsing;
-    //   state.TrackUse = (tempUse == 0) ? "POSITION" : (tempUse == 1) ? "PIPE" : (tempUse == 2) ? "PARTITION" : (tempUse == 3) ? "VALUE" : (tempUse == 4) ? "HYDRANT" : (tempUse == 5) ? "MANHOLE" : (tempUse == 6) ? "EUMETER" : (tempUse == 7) ? "NAVIGATION" : (tempUse == 8) ? "FUZZY" : (tempUse == 9) ? "GPS" : (tempUse == 10) ? "CLEARALL" : (tempUse == 11) ? "SELECTLAYER" : null;
-    // },
+    GetTolerance (state) {
+      state.Tolerance = (state.Scale <= 12753 && state.Scale > 3188) ? 15 : (state.Scale <= 3188 && state.Scale > 797) ? 3 : (state.Scale <= 797 && state.Scale > 398) ? 1.5 : (state.Scale <= 398 && state.Scale > 199) ? 1 : (state.Scale <= 199 && state.Scale > 0) ? 0.5 : 0;
+    },
+    UseTrack (state, payload) {
+      let tempUse = payload.isUsing;
+      state.TrackUse = (tempUse == 0) ? "POSITION" : (tempUse == 1) ? "PIPE" : (tempUse == 2) ? "PARTITION" : (tempUse == 3) ? "VALUE" : (tempUse == 4) ? "HYDRANT" : (tempUse == 5) ? "MANHOLE" : (tempUse == 6) ? "EUMETER" : (tempUse == 7) ? "NAVIGATION" : (tempUse == 8) ? "FUZZY" : (tempUse == 9) ? "GPS" : (tempUse == 10) ? "CLEARALL" : (tempUse == 11) ? "SELECTLAYER" : null;
+    },
     // GetMapFileStr (state, payload) {
     //   state.mapFileStr = payload.MapStr;
     // },
-    // MaxlayerOptions (state, payload) {
-    //   state.MaxSelect = payload.MaxSelect
-    // },
-    // ControlLayerSetting (state, payload) {
-    //   state.IsLayerSelect = payload.LayerSelect;
-    //   if (payload.LayerSelect) {
-    //     // 紀錄目前使用的功能
-    //     this.commit('UseTrack', {
-    //       isUsing: 11
-    //     });
-    //   }
-    // }
+    ControlLayerSetting (state, payload) {
+      state.IsLayerSelect = payload.LayerSelect;
+      if (payload.LayerSelect) {
+        // 紀錄目前使用的功能
+        this.commit('UseTrack', {
+          isUsing: 11
+        });
+      }
+    },
+    MaxlayerOptions (state, payload) {
+      state.MaxSelect = payload.maxSelect
+    },
+    LandlayerOptions (state, payload) {
+      state.LandSelect = payload.landSelect
+    },
   },
   actions: {
   },
