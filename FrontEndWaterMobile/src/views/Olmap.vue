@@ -18,7 +18,7 @@
       <b-dropdown-item-button class="ibtnfix clearbtn" variant="link">
         <b-icon icon="trash"></b-icon>
       </b-dropdown-item-button>
-      <b-dropdown-item-button class="ibtnfix selectlayer" variant="link" @click.stop="ShowLayerSelect!=ShowLayerSelect" @click="ControlLayerSetting(true)">
+      <b-dropdown-item-button class="ibtnfix selectlayer" variant="link" @click.stop="ShowLayerSelect" @click="ControlLayerSetting(true)">
         <b-icon icon="layers"></b-icon>
       </b-dropdown-item-button>
     </b-dropdown>

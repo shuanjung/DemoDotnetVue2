@@ -1,5 +1,5 @@
 <template>
-    <div class="LayerSelect" @click.stop="ShowLayerSelect=!ShowLayerSelect">
+    <div class="LayerSelect" @click.stop="ShowLayerSelect">
         <div class="content">
             <b-navbar>
                 <b-navbar-brand>圖層設定</b-navbar-brand>
