@@ -40,6 +40,106 @@ export default new Vuex.Store({
     Attributes: false,
     mapFileStr: "01,02,03,04,05,06,07,08,09,10,11,12,13",
     MaplayerSelected: ['pipe80', 'pipe100-300', 'pipe350-700', 'pipe800', 'pipe400u', 'pipe400d', 'pcross', 'hydrantl', 'hydrant', 'manhole', 'valve'],
+    MaplayerOptions: [{
+      "text": "所有圖層",
+      "value": null,
+      "icon": "layerIcon layer",
+      "opened": true,
+      "children": [
+        {
+          "text": "DMA",
+          "icon": "layerIcon DMA",
+          "value": "regionnetl_b,regionnetl_a,regionnetm_b,regionnetm_a,regionnet_a,regionnet_b",
+          "selected": false,
+          "children": [
+            {
+              "text": "邊界閥",
+              "icon": "layerIcon boundvalve",
+              "value": "boundvalve",
+              "selected": false
+            },
+            {
+              "text": "分區計量管網水量計",
+              "icon": "layerIcon meter",
+              "value": "meter",
+              "selected": false
+            }
+          ]
+        },
+        {
+          "text": "基本地形圖",
+          "icon": "layerIcon mainbuildingbg",
+          "value": "rodes,river,railway,roadlbl,village,admin1,place,build",
+          "selected": false
+        },
+        {
+          "text": "管塞",
+          "icon": "layerIcon pipecover",
+          "value": "pipecover",
+          "selected": false
+        },
+        {
+          "text": "管帽",
+          "icon": "layerIcon pipehat",
+          "value": "pipehat",
+          "selected": false
+        },
+        {
+          "text": "管線",
+          "value": "pipe80,pipe100-300,pipe350-700,pipe800,pipe400u,pipe400d",
+          "selected": true,
+          "disabled": true
+        },
+        {
+          "text": "跨管",
+          "value": "pcross",
+          "selected": true,
+          "disabled": true
+        },
+        {
+          "text": "消防栓",
+          "value": "hydrantl,hydrant",
+          "selected": true,
+          "disabled": true
+        },
+        {
+          "text": "人手孔",
+          "value": "manhole",
+          "selected": true,
+          "disabled": true
+        },
+        {
+          "text": "開關閥",
+          "value": "valve",
+          "selected": true,
+          "disabled": true
+        },
+        {
+          "text": "用戶水表組",
+          "icon": "layerIcon eumeter",
+          "value": "eupipe,saddle,packer,eumeter",
+          "selected": false
+        },
+        {
+          "text": "廢棄管線",
+          "icon": "layerIcon discardpipe",
+          "value": "pipediscard",
+          "selected": false
+        },
+        {
+          "text": "修漏點",
+          "icon": "layerIcon leak",
+          "value": "leak",
+          "selected": false
+        },
+        {
+          "text": "場站(設施、水池)",
+          "icon": "layerIcon station",
+          "value": "station,stationl,station_quality,station_pressure,station_intake,station_distribute",
+          "selected": false
+        }
+      ]
+    }]
   },
   getters: {
   },
@@ -222,10 +322,10 @@ export default new Vuex.Store({
         TWESource.addFeature(mapfeature);
       }
     },
-    // TWEReflash () {
-    //   TWESource.clear();
-    //   this.commit('set_TWE');
-    // },
+    TWEReflash () {
+      TWESource.clear();
+      this.commit('set_TWE');
+    },
     GetTolerance (state) {
       state.Tolerance = (state.Scale <= 12753 && state.Scale > 3188) ? 15 : (state.Scale <= 3188 && state.Scale > 797) ? 3 : (state.Scale <= 797 && state.Scale > 398) ? 1.5 : (state.Scale <= 398 && state.Scale > 199) ? 1 : (state.Scale <= 199 && state.Scale > 0) ? 0.5 : 0;
     },
@@ -236,6 +336,12 @@ export default new Vuex.Store({
     // GetMapFileStr (state, payload) {
     //   state.mapFileStr = payload.MapStr;
     // },
+    MaplayerSelected (state, payload) {
+      state.MaplayerSelected = payload.maplayerSelected;
+    },
+    MaplayerOptions (state, payload) {
+      state.MaplayerOptions = payload.maplayerOptions;
+    },
     ControlLayerSetting (state, payload) {
       state.IsLayerSelect = payload.LayerSelect;
       if (payload.LayerSelect) {
@@ -246,10 +352,10 @@ export default new Vuex.Store({
       }
     },
     MaxlayerOptions (state, payload) {
-      state.MaxSelect = payload.maxSelect
+      state.MaxSelect = payload.maxSelect;
     },
     LandlayerOptions (state, payload) {
-      state.LandSelect = payload.landSelect
+      state.LandSelect = payload.landSelect;
     },
   },
   actions: {

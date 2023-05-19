@@ -22,6 +22,16 @@ export default {
         VJstree
     },
     computed: {
+        data: {
+            get() {
+                return this.$store.state.MaplayerOptions;
+            },
+            set(value) {
+                this.$store.commit('MaplayerOptions', {
+                    maplayerOptions: value
+                });
+            }
+        },
         ShowLayerSelect: {
             get() {
                 return this.$store.state.IsLayerSelect;
@@ -53,6 +63,13 @@ export default {
             }
         }
     },
+    watch: {
+        '$store.state.MaplayerSelected': function (newValue) {
+            if (newValue) {
+                this.$store.commit("TWEReflash");
+            }
+        },
+    },
     mounted () {
         document.addEventListener('click', (e) => {
             if (e.target.className !== 'LayerSelect') {
@@ -61,6 +78,19 @@ export default {
         })
     },
     methods: {
+        setSelectedItems () {
+            let selectedItems = [];
+            this.$refs.tree.handleRecursionNodeChilds(this.$refs.tree, node => {
+                if (typeof node.model != 'undefined' && Object.prototype.hasOwnProperty.call(node.model, "selected") && node.model.selected) {
+                    if (node.model.value != null) {
+                        selectedItems.push(node.model.value);
+                    }
+                }
+            });
+            this.$store.commit('MaplayerSelected', {
+                maplayerSelected: selectedItems
+            });
+        },
         changMax () {
             this.$store.commit('changMaxlayer');
         },
@@ -136,5 +166,14 @@ export default {
     font-weight: bold;
     color: #007bff;
     font-size: 1.1rem;
+}
+
+/* css隱藏必要選取節點 */
+.tree-children li:nth-child(5),
+.tree-children li:nth-child(6),
+.tree-children li:nth-child(7),
+.tree-children li:nth-child(8),
+.tree-children li:nth-child(9) {
+    display: none;
 }
 </style>
