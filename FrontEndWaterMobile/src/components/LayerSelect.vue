@@ -3,7 +3,7 @@
         <div class="content">
             <b-navbar>
                 <b-navbar-brand>圖層設定</b-navbar-brand>
-                <b-icon icon="x-ssquare" class="ml-auto iconFix" @click="ControlLayerSetting(false)"></b-icon>
+                <b-icon icon="x-square" class="ml-auto iconFix" @click="ControlLayerSetting(false)"></b-icon>
             </b-navbar>
             <div class="checkboxDiv">
                 <b-form-checkbox v-model="MaxChecked" name="check-button" switch size="sm" @change="changMax">正射影像圖(混合)</b-form-checkbox>
@@ -175,5 +175,54 @@ export default {
 .tree-children li:nth-child(8),
 .tree-children li:nth-child(9) {
     display: none;
+}
+
+/* .tree-icon .tree-themeicon-custom .layerIcon {
+    vertical-align: middle;
+    background-position: none;
+} */
+
+.layer {
+    background-image: url(../assets/layers.png) !important;
+}
+
+.DMA {
+    background-image: url(../assets/DMA.png) !important;
+}
+
+.mainbuildingbg {
+    background-image: url(../assets/mainbuildingbg.png) !important;
+}
+
+.pipecover {
+    background-image: url(../assets/pipecover.png) !important;
+}
+
+.pipehat {
+    background-image: url(../assets/pipehat.png) !important;
+}
+
+.eumeter {
+    background-image: url(../assets/eumeterIcon.png) !important;
+}
+
+.meter {
+    background-image: url(../assets/meter.png) !important;
+}
+
+.discardpipe {
+    background-image: url(../assets/discardpipe.png) !important;
+}
+
+.leak {
+    background-image: url(../assets/leakIcon.png) !important;
+}
+
+.station {
+    background-image: url(../assets/station.png) !important;
+}
+
+.boundvalve {
+    background-image: url(../assets/boundvalve.png) !important;
 }
 </style>
