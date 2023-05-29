@@ -3,7 +3,7 @@ import Map from "ol/Map";
 import View from "ol/View";
 import {
     Tile as TileLayer,
-    // Vector as VectorLayer
+    Vector as VectorLayer
 } from "ol/layer";
 import {
     Vector as VectorSource
@@ -63,10 +63,10 @@ let TWEFeature = new Feature({
 let TWESource = new VectorSource({
     name: [TWEFeature]
 });
-// let TWEMap = new VectorLayer({
-//     title: "自來水設備圖",
-//     source: TWESource
-// });
+let TWEMap = new VectorLayer({
+    title: "自來水設備圖",
+    source: TWESource
+});
 // 設定 icon 圖層
 // let GPSiconFeature = new Feature ({
 //     name: 'GpsPoint'
@@ -169,7 +169,7 @@ let TWESource = new VectorSource({
 //     zIndex: 0
 // });
 
-// waterlayGroup.getLayers().push(TWEMap);
+waterlayGroup.getLayers().push(TWEMap);
 // waterlayGroup.getLayers().push(GpsLayer);
 // waterlayGroup.getLayers().push(FuzzyLayer);
 // waterlayGroup.getLayers().push(InterLayer);
