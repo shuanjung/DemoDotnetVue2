@@ -69,25 +69,30 @@ export default {
   },
   watch: {
     // 監聽目前範圍決定要載入的map檔
-    // '$store.state.extent' : function (newValue) {
-    //   if (newValue) {
-    //     this.axios.get('api/MapfileQuery/' + encodeURIComponent(newValue[0]) + "/" + encodeURIComponent(newValue[2]) + "/" + encodeURIComponent(newValue[1]) + "/" + encodeURIComponent(newValue[3]))
-    //       .then(response => {
-    //         this.$store.commit('GetMapFileStr', {
-    //           MapStr: response.data.wT_ID
-    //         });
-    //       })
-    //       // .catch(function () {
-    //       //   new ErrorAlert("連接逾時！請重新操作");
-    //       // });
-    //   }
-    // },
+    '$store.state.extent' : function (newValue) {
+      if (newValue) {
+        this.$store.commit('GetMapFileStr', {
+              MapStr: "01"
+            });
+      }
+      // if (newValue) {
+      //   this.axios.get('api/MapfileQuery/' + encodeURIComponent(newValue[0]) + "/" + encodeURIComponent(newValue[2]) + "/" + encodeURIComponent(newValue[1]) + "/" + encodeURIComponent(newValue[3]))
+      //     .then(response => {
+      //       this.$store.commit('GetMapFileStr', {
+      //         MapStr: response.data.wT_ID
+      //       });
+      //     })
+      //     // .catch(function () {
+      //     //   new ErrorAlert("連接逾時！請重新操作");
+      //     // });
+      // }
+    },
     // 當mapFileStr值改變時，必須重新截圖(更換mapserver參數)
-    // '$store.state.mapFileStr': function (newValue) {
-    //   if (newValue) {
-    //     this.$store.commit("set_TWE");
-    //   }
-    // },
+    '$store.state.mapFileStr': function (newValue) {
+      if (newValue) {
+        this.$store.commit("set_TWE");
+      }
+    },
   },
   mounted() {
     this.$nextTick(function () {

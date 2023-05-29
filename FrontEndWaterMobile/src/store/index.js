@@ -333,9 +333,9 @@ export default new Vuex.Store({
       let tempUse = payload.isUsing;
       state.TrackUse = (tempUse == 0) ? "POSITION" : (tempUse == 1) ? "PIPE" : (tempUse == 2) ? "PARTITION" : (tempUse == 3) ? "VALUE" : (tempUse == 4) ? "HYDRANT" : (tempUse == 5) ? "MANHOLE" : (tempUse == 6) ? "EUMETER" : (tempUse == 7) ? "NAVIGATION" : (tempUse == 8) ? "FUZZY" : (tempUse == 9) ? "GPS" : (tempUse == 10) ? "CLEARALL" : (tempUse == 11) ? "SELECTLAYER" : null;
     },
-    // GetMapFileStr (state, payload) {
-    //   state.mapFileStr = payload.MapStr;
-    // },
+    GetMapFileStr (state, payload) {
+      state.mapFileStr = payload.MapStr;
+    },
     MaplayerSelected (state, payload) {
       state.MaplayerSelected = payload.maplayerSelected;
     },
