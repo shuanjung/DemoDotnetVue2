@@ -18,7 +18,7 @@ import {
   Icon,
   Point,
   getTopLeft,
-  // transformExtent
+  transformExtent
 } from '@/mapconfig/mapconfig'
 Vue.use(Vuex)
 
@@ -242,12 +242,12 @@ export default new Vuex.Store({
     changLandlayer (state) {
       state.landLayer.setVisible(state.LandSelect);
     },
-    // flyToZoneExtent (state, payload) {
-    //   let Extent = payload.userExtent.split(",");
-    //   let b = [Extent[0], Extent[1], Extent[2], Extent[3]];
-    //   b = transformExtent(b, "3826", "3826");
-    //   state.map.getView().fit(b, state.map.getSize())
-    // },
+    flyToZoneExtent (state, payload) {
+      let Extent = payload.userExtent.split(",");
+      let b = [Extent[0], Extent[1], Extent[2], Extent[3]];
+      b = transformExtent(b, "3826", "3826");
+      state.map.getView().fit(b, state.map.getSize())
+    },
     // flyToExtent (state, extent) {
     //   // 取消小括號內容(不含小括號) 資料格式為(a b, c d)
     //   // eslint-disable-next-line
@@ -308,7 +308,7 @@ export default new Vuex.Store({
               state.PipeGid + 
               "&PlanGid=" + 
               state.PlanGid + 
-              "&BuiltGid=" + 
+              "&BulitGid=" + 
               state.BuiltGid
           }),
         });
