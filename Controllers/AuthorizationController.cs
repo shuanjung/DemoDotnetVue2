@@ -116,7 +116,7 @@ namespace DemoDotnetVue2.Controllers
                 search.Filter = $"(SAMAccountName={AuthorInfo.Account})";
                 search.PropertiesToLoad.Add("cn");
                 SearchResult result = search.FindOne();
-                if (result != null)
+                if (result == null)
                 {
                     HttpContext.Session.Clear();
                     return Ok(new { Tologin = "ADNoAuthorization" });

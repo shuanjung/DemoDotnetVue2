@@ -82,9 +82,9 @@ export default {
               MapStr: response.data.wT_ID
             });
           })
-          .catch(function () {
-            new ErrorAlert("連接逾時！請重新操作");
-          });
+          // .catch(function () {
+          //   new ErrorAlert("連接逾時！請重新操作");    // 後端map檔載入失敗
+          // });
       }
     },
     // 當mapFileStr值改變時，必須重新截圖(更換mapserver參數)
