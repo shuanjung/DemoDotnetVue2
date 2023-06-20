@@ -38,6 +38,7 @@ export default new Vuex.Store({
     Tolerance: null,
     TrackUse: null,
     Attributes: false,
+    zindex: 0,
     mapFileStr: "01,02,03,04,05,06,07,08,09,10,11,12,13",
     MaplayerSelected: ['pipe80', 'pipe100-300', 'pipe350-700', 'pipe800', 'pipe400u', 'pipe400d', 'pcross', 'hydrantl', 'hydrant', 'manhole', 'valve'],
     MaplayerOptions: [{
@@ -242,6 +243,41 @@ export default new Vuex.Store({
     changLandlayer (state) {
       state.landLayer.setVisible(state.LandSelect);
     },
+    flyTo (state, payload) {
+      let location = payload.location;
+      let setzoom = payload.setzoom;
+      let done = payload.done;
+      let view = state.map.getView();
+      state.baseLayer = null;  // 為何清空?
+      let duration = 2000;
+      let zoom = view.getZoom();
+      let parts = 2;
+      let called = false;
+
+      function callback (complete) {
+        --parts;
+        if (called) {
+          return;
+        }
+        if (parts === 0 || !complete) {
+          called = true;
+          done(complete);
+        }
+      }
+      
+      view.animate ({
+        center: location,
+        duration: duration
+      },callback);
+
+      view.animate ({
+        zoom: zoom - 1,
+        duration: duration / 2
+      }, {
+        zoom: setzoom,
+        duration: duration / 2
+      },callback);
+    },
     flyToZoneExtent (state, payload) {
       let Extent = payload.userExtent.split(",");
       let b = [Extent[0], Extent[1], Extent[2], Extent[3]];
@@ -332,6 +368,19 @@ export default new Vuex.Store({
     UseTrack (state, payload) {
       let tempUse = payload.isUsing;
       state.TrackUse = (tempUse == 0) ? "POSITION" : (tempUse == 1) ? "PIPE" : (tempUse == 2) ? "PARTITION" : (tempUse == 3) ? "VALUE" : (tempUse == 4) ? "HYDRANT" : (tempUse == 5) ? "MANHOLE" : (tempUse == 6) ? "EUMETER" : (tempUse == 7) ? "NAVIGATION" : (tempUse == 8) ? "FUZZY" : (tempUse == 9) ? "GPS" : (tempUse == 10) ? "CLEARALL" : (tempUse == 11) ? "SELECTLAYER" : null;
+    },
+    // 設定一個計時器每次做這個函數就增加Zindex的值 再將這個值設成ZIndex 因為變數會持續增加 所以要套疊的圖層會永遠在最上面
+    SetZIndex (state, payload) {
+      state.zindex++;
+      let zIndex = state.zindex;
+      let name = payload.name;
+      waterlayGroup.getLayers().forEach(
+        layer => {
+          if (layer.get('name') === name) {
+            layer.setZIndex(zIndex);
+          }
+        }
+      )
     },
     GetMapFileStr (state, payload) {
       state.mapFileStr = payload.MapStr;

@@ -68,17 +68,17 @@ let TWEMap = new VectorLayer({
     source: TWESource
 });
 // 設定 icon 圖層
-// let GPSiconFeature = new Feature ({
-//     name: 'GpsPoint'
-// });
-// let GpsSource = new VectorSource ({
-//     features: [GPSiconFeature]
-// });
-// let GpsLayer = new VectorLayer ({
-//     name: "Gps",
-//     source: GpsSource,
-//     zIndex: 0
-// });
+let GPSiconFeature = new Feature ({
+    name: 'GpsPoint'
+});
+let GpsSource = new VectorSource ({
+    features: [GPSiconFeature]
+});
+let GpsLayer = new VectorLayer ({
+    name: "Gps",
+    source: GpsSource,
+    zIndex: 0 
+});
 // let FuzzyiconFeature = new Feature ({
 //     name: 'FuzzyPoint'
 // });
@@ -170,7 +170,7 @@ let TWEMap = new VectorLayer({
 // });
 
 waterlayGroup.getLayers().push(TWEMap);
-// waterlayGroup.getLayers().push(GpsLayer);
+waterlayGroup.getLayers().push(GpsLayer);
 // waterlayGroup.getLayers().push(FuzzyLayer);
 // waterlayGroup.getLayers().push(InterLayer);
 // waterlayGroup.getLayers().push(EumeterLayer);
@@ -180,6 +180,12 @@ waterlayGroup.getLayers().push(TWEMap);
 // waterlayGroup.getLayers().push(ManholeLayer);
 // waterlayGroup.getLayers().push(EumeterQueryLayer);
 
+function transformXY (x, y, destp, sourcep) {
+    let pdestp = getProjection("EPSG:" + destp); // destination
+    let psourcep = getProjection("EPSG:" + sourcep); // source
+    let point = transform([x, y], pdestp, psourcep);
+    return point;
+}
 function transformExtent (extent, destp, sourcep) {
     let pdestp = getProjection("EPSG:" + destp); //destination
     let psourcep = getProjection("EPSG:" + sourcep);
@@ -248,7 +254,7 @@ function ClearAllPoint () {
 export {
     TWESource,
     waterlayGroup,
-    // GpsSource,
+    GpsSource,
     // FuzzySource,
     // InterSource,
     // EumeterSource,
@@ -279,5 +285,6 @@ export {
     CorrectAlert,
     CloseSWAlert,
     ClearAllPoint,
+    transformXY,
     transformExtent
 }

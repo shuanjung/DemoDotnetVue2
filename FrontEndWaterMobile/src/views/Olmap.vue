@@ -29,10 +29,16 @@
 
 <script>
 import { 
+  GpsSource,
+  Feature,
+  Style,
+  Icon,
+  Point,
+  transformXY,
   CorrectAlert,
   ErrorAlert,
-  CloseSWAlert,
-  ClearAllPoint,
+  // CloseSWAlert,
+  // ClearAllPoint,
 } from '@/mapconfig/mapconfig';
 import SearchBar from "@/components/SearchDetails/SearchBar.vue";
 import CommonCard from "@/components/CommonCard.vue";
@@ -134,8 +140,49 @@ export default {
         this.ShowSearch = false;
       }
     },
+    addpopupGPS (xy) {
+      GpsSource.clear();           // 清除GPS圖層，可是看不出差別
+      let iconStyle = new Style ({
+        image: new Icon ({
+          scale: 0.7,
+          rotateWithView: false,
+          anchor: [0.5, 1],
+          anchorXUnits: "fraction",
+          anchorYUnits: "fraction",
+          opacity: 1,
+          src: require("@/assets/GPS.png"),
+        }),
+        zIdex: 5
+      });
+
+      let feature = new Feature ({
+        geometry: new Point([xy[0], xy[1]])
+      });
+
+      feature.setStyle(iconStyle);
+      GpsSource.addFeature(feature);
+      this.$store.commit('SetZIndex', {
+        name: "Gps"
+      });
+    },
+    GPSzoomxy (str) {
+      GpsSource.clear();
+      let ay = str["xy"].split(",");
+      let x = parseFloat(ay[0]);
+      let y = parseFloat(ay[1]);
+      let epsg_code = str["epsg_code"];
+      let setzoom = str["zoom"];
+      let xy = new transformXY(x, y, epsg_code, "3826");
+      this.$store.commit("flyTo", {
+        location: xy,
+        setzoom: setzoom,
+        done: () => {}
+      });
+      this.addpopupGPS(xy);
+    },
     showPosition (position) {
       new CorrectAlert("GPS定位中........");
+      // 獲得 經度,緯度 座標
       this.gpsLoction = 
           position.coords.longitude + "," + position.coords.latitude;
       this.GPSzoomxy({
@@ -145,6 +192,7 @@ export default {
       });
     },
     showError (error) {
+      // 定位失敗警告
       switch (error.code) {
         case error.PERMISSION_DENIED:
           new ErrorAlert(
@@ -165,6 +213,7 @@ export default {
     getLocation () {
       this.ShowSearch = false;
       if (navigator.geolocation) {
+        // 獲取當前位置信息
         navigator.geolocation.getCurrentPosition(
           this.showPosition,
           this.showError
@@ -178,7 +227,7 @@ export default {
       });
     },
     clearLayer () {
-      new ClearAllPoint();
+      // new ClearAllPoint();
     },
     ControlLayerSetting (bool) {
       this.$store.commit('ControlLayerSetting', {
@@ -188,9 +237,9 @@ export default {
   },
   destroyed () {
     // 離開此頁，把之前種的點去掉及清掉Select管線 包含關閉所有SweetAlert
-    clearInterval(this.timer);
-    new CloseSWAlert();
-    new ClearAllPoint();
+    // clearInterval(this.timer);
+    // new CloseSWAlert();
+    // new ClearAllPoint();
   }
 }
 </script>

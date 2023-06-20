@@ -2,7 +2,7 @@
     <div class="commonCard">
         <!-- 按鍵功能 -->
         <div class="ButtonBar">
-            <b-button :class="querybar ? null : 'collapsed'" :aria-expanded="querybar ? 'true' : 'false'" @click="handleClick();" variant="primary">
+            <b-button :class="querybar ? null : 'collapsed'" :aria-expanded="querybar ? 'true' : 'false'" @click="handleClick" variant="primary">
                 <b-icon icon="search"></b-icon>
                 <p>查詢</p>
             </b-button>
@@ -68,18 +68,18 @@ export default {
         };
     },
     mounted() {
-        const dropdown = this.$refs.dropdown;
-        // 監聽設施上拉打開時必須將所有下拉及其他功能關閉
-        this.$root.$on('bv::dropdown::shown', () => {
-            dropdown.hideMenu();
-            // 關閉所有下拉後再開啟設施上拉，不然會蓋到其它CSS
-            this.collapses.forEach(collapse => {
-                collapse.visible = false
-            });
-            this.querybar = false;
-            // 將狀態發送給父節點
-            this.$emit("SmitSearch", this.querybar);
-        })
+        // const dropdown = this.$refs.dropdown;
+        // // 監聽設施上拉打開時必須將所有下拉及其他功能關閉
+        // this.$root.$on('bv::dropdown::shown', () => {
+        //     dropdown.hideMenu();
+        //     // 關閉所有下拉後再開啟設施上拉，不然會蓋到其它CSS
+        //     this.collapses.forEach(collapse => {
+        //         collapse.visible = false
+        //     });
+        //     this.querybar = false;
+        //     // 將狀態發送給父節點
+        //     this.$emit("SmitSearch", this.querybar);
+        // })
     },
     methods: {
         handleClick() {
