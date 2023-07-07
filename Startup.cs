@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using System;
+using DemoDotnetVue2.Models.QueryResult;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -33,6 +34,7 @@ namespace DemoDotnetVue2
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DemoDonetVue2", Version = "v1" });
             });
+            _ = services.AddHttpClient<PolateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

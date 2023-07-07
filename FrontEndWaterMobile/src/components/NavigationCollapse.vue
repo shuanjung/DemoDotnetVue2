@@ -38,15 +38,29 @@ export default {
         font-size: 0.7rem;
         font-weight: bold;
     }
+    .iconFix {
+        font-size: 0.7rem;
+        font-weight: bold;
+    }
 }
 
 .nav-tabs .nav-link.active {
     background-color: #FFE6D9;
 }
 
+/* 調整在ios nav-tabs 顯示不正常 */
 .nav-tabs .nav-link.active:hover,
 .nav-tabs .nav-link.active:focus {
     outline: none;
+}
+
+.iconFix {
+    cursor: pointer;
+}
+
+.iconFix:hover,
+.iconFix:focus {
+    color: #007bff;
 }
 
 .postionFix {

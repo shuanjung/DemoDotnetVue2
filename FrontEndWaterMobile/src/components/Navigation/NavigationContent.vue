@@ -57,12 +57,12 @@ export default {
             if (this.getUserTrace === "NAVIGATION") {
                 let coordinate = this.getClickPoint;
                 let longLat = new transform(this.getClickPoint, "EPSG:3826", "EPSG:4326");
-                // this.axios.get('api/Polate/' + encodeURIComponent(longLat[0]) + "/" + encodeURIComponent(longLat[1]))
-                //     .then(response => {
-                //         if (response.data.pointArray[0].z !==0) {
-                //             this.CoordinateZ = response.data.pointArray[0].z;
-                //         }
-                //     });  // 高程值
+                this.axios.get('api/Polate/' + encodeURIComponent(longLat[0]) + "/" + encodeURIComponent(longLat[1]))
+                    .then(response => {
+                        if (response.data.pointArray[0].z !==0) {
+                            this.CoordinateZ = response.data.pointArray[0].z;
+                        }
+                    });  // 高程值
                 this.Coordinate = `${coordinate[0].toFixed(4)},${coordinate[1].toFixed(4)}`;
                 this.LongLat = `${longLat[0].toFixed(4)},${longLat[1].toFixed(4)}`;
                 this.url = `https://www.google.com/maps/search/?api=1&query=${longLat[1].toFixed(7)},${longLat[0].toFixed(7)}`;
